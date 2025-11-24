@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Echo Art - Frontend Demo</title>
+  <style>
+    :root {
+      --bg: #0f1724;
+      --card: #0b1220;
+      --muted: #9aa8bf;
+      --accent: #7dd3fc;
+      --glass: rgba(255,255,255,0.03);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    * { box-sizing: border-box }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(45deg, #ff0000 0%, #ff8000 15%, #ffff00 30%, #00ff00 45%, #00ffff 60%, #0000ff 75%, #8000ff 90%, #ff00ff 100%);
+      background-size: 400% 400%;
+      animation: rainbowShift 30s ease infinite;
+      color: #e6eef8;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 28px;
+    }
+    @keyframes rainbowShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .container {
+      width: 100%;
+      max-width: 980px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 6px 30px rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    h1 { margin: 0 0 6px 0; font-size: 20px }
+    p.lead { margin: 0 0 18px 0; color: var(--muted); font-size: 13px }
+    .grid { display: grid; grid-template-columns: 1fr 360px; gap: 18px }
+    .card { background: var(--card); padding: 14px; border-radius: 10px; border: 1px solid var(--glass) }
+    .controls { display: flex; gap: 8px; flex-wrap: wrap }
+    button {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.06);
+      color: var(--accent);
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    button.secondary { color: #cbd5e1; border-color: rgba(255,255,255,0.03) }
+    button.danger { color: #ff9aa2 }
+    .small { font-size: 13px; color: var(--muted) }
+    input[type="file"] { color: var(--muted) }
+    textarea {
+      width: 100%;
+      min-height: 130px;
+      resize: vertical;
+      margin-top: 8px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.03);
+      background: transparent;
+      color: #e6eef8;
+      font-size: 14px;
+    }
+    label.small { display: block; margin-top: 8px; color: var(--muted); font-size: 13px }
+    .visual {
+      height: 120px;
+      border-radius: 8px;
+      background: linear-gradient(180deg,#081426,#081426);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 1px dashed rgba(255,255,255,0.02);
+    }
+    canvas { width: 100%; height: 100% }
+    .meta { display: flex; gap: 10px; align-items: center; margin-top: 10px; flex-wrap: wrap }
+    .badge {
+      padding: 6px 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.02);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .preview { margin-top: 10px }
+    .preview audio { width: 100% }
+    .footer {
+      margin-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .muted { color: var(--muted); font-size: 13px }
+    @media (max-width: 880px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" role="main">
+    <h1>Echo Art - Input Studio</h1>
+    <p class="lead">Record audio or paste a text abstract. This demo captures audio, shows a simple waveform and packages inputs for processing.</p>
+    <div class="grid">
+      <div class="card">
+        <h2 style="font-size:16px; margin:0 0 8px 0">1) Record / Upload Audio</h2>
+        <div class="visual" id="visualContainer">
+          <canvas id="waveCanvas"></canvas>
+        </div>
+        <div style="margin-top:12px" class="controls">
+          <button id="btnRecord">Start Recording</button>
+          <button id="btnStop" class="secondary" disabled>Stop</button>
+          <button id="btnPlay" class="secondary" disabled>Play</button>
+          <button id="btnDownload" class="secondary" disabled>Download</button>
+          <input id="fileInput" type="file" accept="audio/*" style="margin-left:auto" />
+        </div>
+        <div class="meta">
+          <span class="badge">Status: <strong id="status">idle</strong></span>
+          <span class="badge">Duration: <strong id="duration">0.00s</strong></span>
+          <span class="badge">Recorded size: <strong id="size">0 KB</strong></span>
+        </div>
+        <div class="preview" id="audioPreviewArea"></div>
+        <hr style="border:none; height:1px; background:rgba(255,255,255,0.02); margin:14px 0" />
+        <h2 style="font-size:16px; margin:0 0 8px 0">2) Text / Abstract Input</h2>
+        <label class="small">Describe a mood, environment, or sound (example: "Soft cave echoes, dripping water, blue light")</label>
+        <textarea id="textAbstract" placeholder="Write a short abstract or description ..."></textarea>
+        <div class="footer">
+          <div class="muted">Tip: Provide both audio + text to create richer art.</div>
+          <div>
+            <button id="btnSend" title="Send inputs to backend">Send to Process</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h2 style="font-size:16px; margin:0 0 8px 0">Preview & Output</h2>
+        <div style="margin-bottom:10px" class="small">Uploaded / recorded audio preview</div>
+        <div id="previewBox" class="card" style="padding:10px;">
+          <div id="previewList" class="small muted">No audio yet</div>
+        </div>
+        <div style="margin-top:12px">
+          <div class="small">Selected abstract</div>
+          <div id="textPreview" class="small muted" style="margin-top:6px; min-height:40px">No text yet</div>
+        </div>
+        <hr style="border:none; height:1px; background:rgba(255,255,255,0.02); margin:12px 0" />
+        <div style="margin-top:6px" class="small">Backend status / result</div>
+        <div id="backendResult" style="margin-top:8px; min-height:120px; padding:10px; border-radius:8px; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); color:var(--muted)">
+          No result yet. When you hit <strong>Send to Process</strong>, the app will POST the recorded/uploaded audio + text to a backend endpoint.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const btnRecord = document.getElementById('btnRecord');
+    const btnStop = document.getElementById('btnStop');
+   
