@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Echo Art 🎨</title>
+  <!-- Link to CSS inside /static -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <h1>Echo Art 🎨</h1>
+
+  <!-- Text input -->
+  <textarea id="textInput" placeholder="Type something..."></textarea>
+  <br>
+  <button onclick="generateImage()">Generate Image</button>
+
+  <br><br>
+
+  <!-- Voice input -->
+  <input type="file" id="voiceInput" accept="audio/*">
+  <br>
+  <button onclick="uploadVoice()">Convert Voice</button>
+
+  <br><br>
+
+  <!-- Output section -->
+  <div id="output"></div>
+
+  <!-- Link to JS inside /static -->
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
