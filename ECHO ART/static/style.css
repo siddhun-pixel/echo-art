@@ -1,0 +1,61 @@
+/* General page styling */
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 40px;
+  background-color: #f4f4f9;
+  color: #333;
+}
+
+/* Title */
+h1 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+/* Text area */
+textarea {
+  width: 320px;
+  height: 120px;
+  margin: 10px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  resize: none;
+}
+
+/* Buttons */
+button {
+  padding: 10px 20px;
+  margin: 10px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+/* File input */
+input[type="file"] {
+  margin: 10px;
+}
+
+/* Output section */
+#output {
+  margin-top: 20px;
+  font-weight: bold;
+  color: #444;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+  display: inline-block;
+  min-width: 300px;
+}
